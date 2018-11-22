@@ -1,0 +1,29 @@
+=======================================
+===   					===
+===		uXXX:  	user's intent	===
+===		aXXX:	Agent intent	===
+===					===
+=======================================
+
+u000:		No_Res
+u001: 		Greeting
+u002:		Ask_item
+u002001: 	Ask_drink
+u002002: 	Ask_food
+u003: 		Ask_price
+u004: 		Finishing
+u005: 		Add_item
+u006: 		Delete_item
+u007: 		Update_item
+
+a000: 		No_Res
+a001: 		Greeting
+a002:		Ask_item
+a002001: 	Ask_drink
+a002001: 	Ask_food
+a003: 		Ask_price
+a004: 		Finishing
+a005: 		Add_item
+a006: 		Delete_item
+a007: 		Update_item
+a008: 		Food_confirm

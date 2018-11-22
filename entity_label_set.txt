@@ -1,0 +1,13 @@
+=======================================
+===  								===
+===	 each code represent an entity	===
+===									===
+=======================================
+
+
+m001:		menu
+m001001: 	drinks
+m001002: 	soup
+m001003: 	appetizer
+m001004: 	main course
+m002: sys-number
