@@ -1,0 +1,6 @@
+[u002002] User:   How much for the [m001003]{scallion pancakes}?
+[a003] Agent: $5 please
+[u008] User: Okay
+[a003] Agent: Do you want it?
+[u002002] User: Yes
+[a000]

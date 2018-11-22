@@ -1,0 +1,8 @@
+[u001] User:   Hello
+[a001] Agent: Hi, how can I help you?
+[u005] User:   I want [m001001]{green tea}
+[a005] Agent: Okay, what else?
+[u005] User:   May I have [m001004]{pizza}
+[a005] Agent: Okay,  anything else?
+[u004] User:   That will be all
+[a000]

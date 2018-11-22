@@ -1,0 +1,6 @@
+[u002002] User:  Hi. How are you doing?
+[a001] Agent: Hi, how can I help you?
+[u002001] User: [m001001]{coffee}
+[a005] Agent: Okay,  anything else?
+[u002002] User: One [m001004]{Peking duck} please
+[a000]

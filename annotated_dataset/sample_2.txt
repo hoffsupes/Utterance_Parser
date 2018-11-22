@@ -1,0 +1,5 @@
+[u002002] User:   Do you have any [m001004]{Peking Duck}
+[a005] Agent: Sure, what else?
+[u007] User:   Actually, make that [m002]{two} [m001004]{Peking Duck}
+[a003] Agent: $5 please
+[u000]
