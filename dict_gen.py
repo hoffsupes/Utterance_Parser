@@ -2,8 +2,32 @@ import os
 import numpy as np
 import json
 import pdb
+import string
+import re
 
-
+def process_punc(tem,tem2,mode):
+	p = string.punctuation;
+	p = re.sub('[!{}\]\[]', '',p);
+	if (mode):
+		pos1 = tem.find('{');
+		pos2 = len(tem) - 1;
+	else:
+		pos1 = 0;
+		pos2 = len(tem) - 1;
+	pos = np.asarray([pos1,pos2]);
+	L = [];
+	K = [];
+	for i in p:
+		if(i in tem):
+			L.append(tem.find(i));
+	for i,l in enumerate(L):
+		K.append((np.abs(pos-l)).argmin());
+	for i,k in enumerate(K):
+		if(k):
+			tem2 = tem2 + tem[L[i]];
+		else:
+			tem2  = tem[L[i]] + tem2;
+	return tem2;		
 
 def create_small_dict(entlist,entype,dct):
 	for i,e in enumerate(entype):
@@ -36,7 +60,11 @@ def get_ent_list(sp):
 				c = c + 1;
 			elif('}' in sp[i+c]):
 				m = 1;
-				ent = ent +' '+ sp[i+c][:len(sp[i+c])-1];
+				ent = ent + ' ';
+				for i in sp[i+c][:len(sp[i+c])]:
+					if(i == '}'):
+						break;
+					ent = ent + i;
 				break;
 			else:
 				ent = ent +' '+ sp[i+c];
@@ -79,11 +107,16 @@ def pross_file(fnam,dicta,dictb,mode):
 				for j,T in enumerate(tem):
 					if(('[' in T)| (']' in T)):
 						if(T[ T.index('[')+1:T.index(']')] == E):
+							tmp = tem[j];
 							tem[j] = '@'+dictb[E];
-			
+							tem[j] = process_punc(tmp,tem[j],1);
 			for i,T in enumerate(tem):
 				if (('{' in T)|('}' in T)):
-					del(tem[i]);	
+					yes = process_punc(tem[i],'',0);
+					if(len(yes) == 0):
+						del(tem[i]);	
+					else:
+						tem[i] = yes;
 		utterance  = joiner.join(tem);
 		if(sp[findx-2][0] != '[' ):
 			print('Your file is formatted wrong, please format the input file correctly! \n The intent comes before the speaker label and is place in brackets [ ] for eg. [a001] for intent a001')
@@ -137,4 +170,5 @@ dname = "annotated_dataset";
 new_dict = get_dict_list(dname,enam,inam);
 
 print(json.dumps(new_dict,indent=4));
+
 
