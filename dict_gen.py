@@ -5,6 +5,14 @@ import pdb
 import string
 import re
 
+### Put in a directory which has entity_label_set.txt, intent_label_set.txt and finally 
+### the folder which will contain all the example dialogues in .txt format 'annotated_dataset'.
+### Put the name of that folder in dname
+### and the corresponding files in enam and inam for entity_label_set.txt, intent_label_set.txt
+### This program should directly run if you place this in any directory which satisfies the above criteria
+### If not, replace dname, enam and inam with the absolute (full) paths for the same
+### add commhandler capabilites
+
 def process_punc(tem,tem2,mode):
 	p = string.punctuation;
 	p = re.sub('[!{}\]\[]', '',p);
@@ -55,7 +63,7 @@ def get_ent_list(sp):
 					etype = sp[i+c][sp[i+c].find('[')+1:sp[i+c].find(']')];
 				ent = sp[i+c][sp[i+c].find('{') + 1:len(sp[i+c])];
 				if('}' in sp[i+c]):
-					ent = ent[:len(ent)-1];
+					ent = ent[:ent.find('}')];
 					break;
 				c = c + 1;
 			elif('}' in sp[i+c]):
@@ -135,6 +143,43 @@ def pross_file(fnam,dicta,dictb,mode):
 	fptr.close();
 	return dicta;
 
+def integrity_check(entset,ent_dict,intset,int_dict,fnam): #Checks for the honesty of the input data 
+	def get_brak_props(line):
+		return [i for i,m in enumerate(line) if '[' == m],\
+		[i for i,m in enumerate(line) if ']' == m],\
+		[i for i,m in enumerate(line) if '{' == m],\
+		[i for i,m in enumerate(line) if '}' == m];	
+	def ischar(line,SO,ch,mod):
+		for i in SO:
+			if mod:
+				if line[i+1] == ch:
+					return 0;
+			else:
+				if line[i-1] == ch:
+					return 0;
+		return 1;
+	for i in list(entset.keys()):
+		if i not in list(ent_dict.keys()):
+			print('Erring entity:', i)
+			print('ERROR in ',fnam,'\n');
+			print('FILE INTEGRITY ERROR! The file entity_label_set.txt has not been updated with the latest entity labels, please do so before running this program!');
+			return 0;
+	for i in intset:
+		if i not in list(int_dict.keys()):
+			print('Erring intent:', i)
+			print('ERROR in ',fnam,'\n');
+			print('FILE INTEGRITY ERROR! The file intent_label_set.txt has not been updated with the latest intent labels, please do so before running this program!');
+			return 0;
+	fptr = open(fnam, "r");
+	for line in fptr:
+		SO,SC,CO,CC = get_brak_props(line);
+		if(not (ischar(line,SO,' ',1) & ischar(line,SC,' ',0)& ischar(line,CO,' ',1)& ischar(line,CC,' ',0))):
+			print('ERROR in ',fnam,'\n');
+			print('Erring line:', line);
+			print('FILE INTEGRITY ERROR! Incorrect formatting in the file in terms of how the brackets are structured, there are spaces in the wrong places after the brackets, please correct them before running this program!');
+	fptr.close();
+	return 1;
+	
 def gen_dict(fnam,enam,inam):
 	dicto = {
 		"sentence_set":{
@@ -150,6 +195,10 @@ def gen_dict(fnam,enam,inam):
 	dicto = pross_file(fnam,dicto,ent_dict,0);
 	entset = pross_file(fnam,entset,{},2);
 	intset = pross_file(fnam,intset,{},3);
+	
+	if(!integrity_check(entset,ent_dict,intset,int_dict,fnam)):
+		print('\n\nThere is an error in either your file content or its formatting, please see the error message above! Please be careful before running the program again! \n')
+		exit(1);
 	
 	dicto['entity_set'] = entset;
 	dicto['intent_seq'] = intset;
@@ -168,7 +217,4 @@ inam = "intent_label_set.txt";
 dname = "annotated_dataset";
 
 new_dict = get_dict_list(dname,enam,inam);
-
 print(json.dumps(new_dict,indent=4));
-
-
